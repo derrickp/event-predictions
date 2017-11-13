@@ -1,8 +1,9 @@
 
 
 export interface Store<T> {
+    create(entity: T): Promise<string>;
     save(entity: T): Promise<void>;
-    save(entities: T[]): Promise<void>;
-    get(id: string): Promise<T>;
-    get(ids?: string[]): Promise<T[]>;
+    saveMany(entities: T[]): Promise<void>;
+    get(key: string): Promise<T | null>;
+    getMany(keys?: string[]): Promise<T[]>;
 }

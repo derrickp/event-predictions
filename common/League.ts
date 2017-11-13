@@ -1,9 +1,9 @@
 
-
 export interface League {
-    id: string;
+    _id?: string;
+    key: string;
     display: string;
-    description: string;
-    greeting: string;
-    tags: string[];
+    description?: string;
+    greeting?: string;
+    tags?: string[];
 }

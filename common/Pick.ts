@@ -1,8 +1,10 @@
 
 import { Option } from "./Option";
 
-export interface Pick {
-    id: string;
+export interface PickTemplate {
+    key: string;
     name: string;
     options: Option[];
 }
+
+export interface Pick extends PickTemplate { }
