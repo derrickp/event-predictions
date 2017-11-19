@@ -23,7 +23,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run build",
-    "build": "npm run compile && npm run webpack && sass && echo Build complete",
+    "build": "npm run compile && npm run webpack && npm run sass && echo Build complete",
     "compile": "tsc -v && tsc && echo server compile complete",
     "webpack": "webpack",
     "watch": "webpack -w",
