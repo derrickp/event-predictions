@@ -41,6 +41,9 @@ export class DBLeagueStore implements LeagueStore {
 
     async save(league: League): Promise<void> {
         const coll: mongodb.Collection<League> = this._db.collection(this._collKey);
+        if (!league.key) {
+            throw new Error("invalid-league-key");
+        }
         const hasOne = (await coll.count({ key: league.key })) > 0;
         if (hasOne) {
             await coll.updateOne({ key: league.key }, league);

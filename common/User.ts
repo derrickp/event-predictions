@@ -9,7 +9,7 @@ export interface User {
     email: string;
     display: string;
     avatar: string;
-    privileges: UserLeaguePrivilege[];
-    predictionTemplateIds: string[];
-    pickIds: string[];
+    privileges?: UserLeaguePrivilege[];
+    predictionTemplateIds?: string[];
+    pickIds?: string[];
 }

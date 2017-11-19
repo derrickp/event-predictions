@@ -2,26 +2,48 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
+import { HashRouter, Route } from "react-router-dom";
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import { App } from "./App";
+import { AppEvents } from "./AppEvents";
+import UserManager from "./auth/UserManager";
 
 const element = document.getElementById("picker-app") as HTMLElement;
 
 export function start() {
-    if ((window as any)["gapi"]) {
-        console.timeEnd("picker-init");
-        console.log("woohoo");
-        render();
-    } else {
-        console.log("nope");
-        setTimeout(() => {
-            console.log("timeout");
-            start();
-        }, 10);
-    }
+    const userManager = new UserManager();
+    userManager.initialize().then(() => {
+        render(userManager);
+    }).catch((error: Error) => {
+        console.error(error.stack);
+        alert(error.message);
+    });
+
+    userManager.watch((eventName) => {
+        render(userManager, eventName);
+    });
 }
 
-export function render() {
-    ReactDOM.render(<App />, element);
+const Container = (props: { userManager: UserManager, loading: boolean }) => {
+    console.log(props.loading);
+    return (
+        <MuiThemeProvider>
+            <HashRouter>
+                <Route path="/" render={(appProps) => {
+                    const showMain = appProps.location.pathname === "/";
+                    return <App userManager={props.userManager} history={appProps.history} showMain={showMain} loading={props.loading} />
+                }} />
+            </HashRouter>
+        </MuiThemeProvider>
+    );
+};
+
+export function render(userManager: UserManager, eventName?: string) {
+    let loading: boolean = eventName ? eventName === AppEvents.LOADING : false;
+
+    ReactDOM.render(<Container userManager={userManager} loading={loading} />, element);
 }
-console.time("picker-init");
-start();
+
+(window as any)["start"] = start; // Set the start function on the window for the callback to the google api script

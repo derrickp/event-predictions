@@ -1,26 +1,69 @@
 import * as Router from "koa-router";
 import * as mongodb from "mongodb";
+import { sign } from "jsonwebtoken";
 
-export class AuthRouter {
-    private readonly _router: Router;
+import { AuthRequest } from "../../common/AuthRequest";
+import { AuthResponse } from "../../common/AuthResponse";
+import { ErrorResponse } from "../../common/ErrorResponse";
+import { DBLeagueStore } from "../stores/DBLeagueStore";
+import { DBUserStore } from "../stores/DBUserStore";
+import { getDb } from "../db/connection";
+import { League } from "../../common/League";
+import { Methods, RouteDefinition } from "./RouteDefinition";
+import { Privileges } from "../../common/Privileges";
+import { User } from "../../common/User";
+import { UserLeaguePrivilege } from "../../common/UserLeaguePrivilege";
+import { verify, GeneralAuthResponse } from "../utilities/auth";
 
-    get router() {
-        return this._router;
+export namespace AuthRouter {
+    export const routes: RouteDefinition[] = [
+        {
+            method: Methods.POST,
+            path: "/api/authenticate",
+            middleware: async (context: Router.IRouterContext) => {
+                try {
+                    const authRequest: AuthRequest = context.request.body;
+                    const genAuth = await verify(authRequest);
+                    const db = getDb();
+                    const store = new DBUserStore(db);
+                    let user = await store.getByEmail(genAuth.email);
+                    if (!user) {
+                        await signUpNewUser(genAuth, store);
+                        user = await store.getByEmail(genAuth.email) as User;
+                    }
+                    const secret = process.env.JWTSECRET as string;
+                    const token = sign({ key: user.key }, secret, { algorithm: 'HS256', expiresIn: "4h" });
+                    const response: AuthResponse = { token };
+                    context.body = JSON.stringify(response);
+                }
+                catch (exception) {
+                    const resp: ErrorResponse = {
+                        message: exception.message,
+                        stack: exception.stack
+                    };
+                    context.throw(400, JSON.stringify(resp));
+                }
+            }
+        }
+    ];
+}
+
+async function signUpNewUser(genAuth: GeneralAuthResponse, store: DBUserStore) {
+    const key = (new Buffer(genAuth.email)).toString("base64");
+    const user: User = {
+        key,
+        email: genAuth.email,
+        display: genAuth.name,
+        avatar: genAuth.picture
+    };
+    const existingUser = await store.get(key);
+    if (existingUser) {
+        throw new Error("user-already-exists");
     }
-
-    constructor() {
-        this._router = new Router({
-            prefix: "/authenticate"
-        });
-
-        this._setupRoutes();
-    }
-
-    private _setupRoutes() {
-        this._router.post("/", (context) => {
-            
-        });
-    }
-
-
+    const privilege: UserLeaguePrivilege = {
+        leagueId: "global",
+        privilege: Privileges.USER
+    };
+    user.privileges = [privilege];
+    await store.save(user);
 }
