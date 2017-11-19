@@ -1,11 +1,8 @@
 import * as Router from "koa-router";
-import * as mongodb from "mongodb";
 
-import { BasicResponse } from "../../common/BasicResponse";
 import { ErrorResponse } from "../../common/ErrorResponse";
 import { DBLeagueStore } from "../stores/DBLeagueStore";
 import { getDb } from "../db/connection";
-import { League } from "../../common/League";
 import { Methods, RouteDefinition } from "./RouteDefinition";
 
 export namespace LeagueRouter {

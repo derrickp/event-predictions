@@ -1,14 +1,11 @@
 import * as Router from "koa-router";
-import * as mongodb from "mongodb";
 import { sign } from "jsonwebtoken";
 
 import { AuthRequest } from "../../common/AuthRequest";
 import { AuthResponse } from "../../common/AuthResponse";
 import { ErrorResponse } from "../../common/ErrorResponse";
-import { DBLeagueStore } from "../stores/DBLeagueStore";
 import { DBUserStore } from "../stores/DBUserStore";
 import { getDb } from "../db/connection";
-import { League } from "../../common/League";
 import { Methods, RouteDefinition } from "./RouteDefinition";
 import { Privileges } from "../../common/Privileges";
 import { User } from "../../common/User";
