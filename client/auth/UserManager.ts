@@ -44,6 +44,11 @@ export default class UserManager {
     }
 
     async googleAuthCallback(googleUser: gapi.auth2.GoogleUser) {
+        // If we already have a user, then we're good.
+        // Let's just leave it for now.
+        if (this.user) {
+            return;
+        }
         this.notify(AppEvents.LOADING);
         const id_token = googleUser.getAuthResponse().id_token;
         const token = await auth.authenticate(AuthTypes.GOOGLE, id_token);
@@ -118,6 +123,4 @@ export default class UserManager {
         }
         return undefined;
     }
-
-
 }
