@@ -1,5 +1,5 @@
 
-import { User } from "../../common/User";
+import { UserDTO } from "../../common/dtos/UserDTO";
 import { UserStore } from "../../common/stores/UserStore";
 
 import * as mongodb from "mongodb";
@@ -13,28 +13,28 @@ export class DBUserStore implements UserStore {
         this._db = db;
     }
 
-    async create(user: User): Promise<string> {
+    async create(user: UserDTO): Promise<string> {
         return "";
     }
 
-    async get(key: string): Promise<User | null> {
-        const coll: mongodb.Collection<User> = this._db.collection(this._collKey);
+    async get(key: string): Promise<UserDTO | null> {
+        const coll: mongodb.Collection<UserDTO> = this._db.collection(this._collKey);
         const user = await coll.findOne({ key });
         return user;
     }
 
-    async getByEmail(email: string): Promise<User | null> {
-        const coll: mongodb.Collection<User> = this._db.collection(this._collKey);
+    async getByEmail(email: string): Promise<UserDTO | null> {
+        const coll: mongodb.Collection<UserDTO> = this._db.collection(this._collKey);
         const user = await coll.findOne({ email });
         return user;
     }
 
-    async getMany(keys: string[]): Promise<User[]> {
+    async getMany(keys: string[]): Promise<UserDTO[]> {
         return [];
     }
 
-    async save(user: User): Promise<void> {
-        const coll: mongodb.Collection<User> = this._db.collection(this._collKey);
+    async save(user: UserDTO): Promise<void> {
+        const coll: mongodb.Collection<UserDTO> = this._db.collection(this._collKey);
         if (!user.key) {
             throw new Error("invalid-league-key");
         }
@@ -46,7 +46,7 @@ export class DBUserStore implements UserStore {
         }
     }
 
-    async saveMany(users: User[]): Promise<void> {
+    async saveMany(users: UserDTO[]): Promise<void> {
 
     }
 }

@@ -1,10 +1,9 @@
 
-import { Option } from "./Option";
+import { PickDTO } from "./dtos/PickDTO";
 
-export interface PickTemplate {
-    key: string;
-    name: string;
-    options: Option[];
+export default class Pick {
+
+    constructor(dto: PickDTO) {
+        
+    }
 }
-
-export interface Pick extends PickTemplate { }

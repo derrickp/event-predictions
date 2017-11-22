@@ -3,6 +3,7 @@ import * as Router from "koa-router";
 import { ErrorResponse } from "../../common/ErrorResponse";
 import { DBLeagueStore } from "../stores/DBLeagueStore";
 import { getDb } from "../db/connection";
+import League from "../models/League";
 import { Methods, RouteDefinition } from "./RouteDefinition";
 
 export namespace LeagueRouter {
@@ -16,8 +17,8 @@ export namespace LeagueRouter {
                     const key = context.params.key;
                     const db = getDb();
                     const store = new DBLeagueStore(db);
-                    const league = await store.get(key);
-                    context.body = JSON.stringify(league);
+                    const leagueDTO = await store.get(key);
+                    context.body = JSON.stringify(leagueDTO);
                 } catch (exception) {
                     const resp: ErrorResponse = {
                         message: exception.message,
@@ -34,8 +35,8 @@ export namespace LeagueRouter {
                 try {
                     const db = getDb();
                     const store = new DBLeagueStore(db);
-                    const leagues = await store.getMany();
-                    context.body = JSON.stringify(leagues);
+                    const leagueDTOs = await store.getMany();
+                    context.body = JSON.stringify(leagueDTOs);
                 } catch (exception) {
                     const resp: ErrorResponse = {
                         message: exception.message,
@@ -50,10 +51,11 @@ export namespace LeagueRouter {
             method: Methods.POST,
             middleware: async (context: Router.IRouterContext) => {
                 try {
-                    const league = context.request.body;
+                    const leagueDTO = context.request.body;
                     const db = getDb();
                     const store = new DBLeagueStore(db);
-                    await store.save(league);
+                    const league = new League(leagueDTO, store);
+                    await league.save();
                     context.body = JSON.stringify({ success: true });
                 } catch (error) {
                     const resp: ErrorResponse = {

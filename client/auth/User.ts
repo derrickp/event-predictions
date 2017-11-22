@@ -1,8 +1,8 @@
 
 import { AuthTypes } from "../../common/AuthRequest";
-import { League } from "../../common/League";
-import { User as UserDTO } from "../../common/User";
-import { UserLeaguePrivilege } from "../../common/UserLeaguePrivilege";
+import { LeagueDTO } from "../../common/dtos/LeagueDTO";
+import { UserDTO } from "../../common/dtos/UserDTO";
+import { LeaguePrivilege } from "../../common/LeaguePrivilege";
 
 export class User {
     avatar: string;
@@ -10,7 +10,7 @@ export class User {
     email: string;
     key: string;
     authType: AuthTypes;
-    privileges: UserLeaguePrivilege[];
+    privileges: LeaguePrivilege[];
     pickIds: string[];
     predictionTemplateIds: string[];
 
@@ -23,7 +23,7 @@ export class User {
         this.predictionTemplateIds = dto.predictionTemplateIds ? dto.predictionTemplateIds : [];
     }
 
-    canAccessLeague(league: League): boolean {
+    canAccessLeague(league: LeagueDTO): boolean {
         const privilege = this.privileges.find(p => p.leagueId === league.key);
         return !!privilege;
     }

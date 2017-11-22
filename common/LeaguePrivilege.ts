@@ -1,7 +1,7 @@
 
 import { Privileges } from "./Privileges";
 
-export interface UserLeaguePrivilege {
-    userKey: string;
+export interface LeaguePrivilege {
+    leagueId: string;
     privilege: Privileges;
 }

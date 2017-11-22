@@ -1,7 +1,7 @@
 
 import { AuthTypes } from "../../common/AuthRequest";
 import { User } from "./User";
-import { User as UserDTO } from "../../common/User";
+import { UserDTO } from "../../common/dtos/UserDTO";
 
 const userMap: Map<string, User> = new Map();
 

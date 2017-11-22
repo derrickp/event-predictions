@@ -1,11 +1,11 @@
 
 import { Store } from "../Store"
-import { User } from "../User";
+import { UserDTO } from "../dtos/UserDTO";
 
-export interface UserStore extends Store<User> {
-    create(user: User): Promise<string>;
-    get(key: string): Promise<User | null>;
-    getMany(keys?: string[]): Promise<User[]>;
-    save(user: User): Promise<void>;
-    saveMany(users: User[]): Promise<void>;
+export interface UserStore extends Store<UserDTO> {
+    create(user: UserDTO): Promise<string>;
+    get(key: string): Promise<UserDTO | null>;
+    getMany(keys?: string[]): Promise<UserDTO[]>;
+    save(user: UserDTO): Promise<void>;
+    saveMany(users: UserDTO[]): Promise<void>;
 }

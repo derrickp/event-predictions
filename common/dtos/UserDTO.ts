@@ -1,15 +1,15 @@
 
-import { UserLeaguePrivilege } from "./UserLeaguePrivilege";
+import { Privileges } from "../Privileges";
 
 /**
  * A representation of a user of the predictions site.
  */
-export interface User {
+export interface UserDTO {
     key: string;
     email: string;
     display: string;
     avatar: string;
-    privileges?: UserLeaguePrivilege[];
+    generalPrivilege: Privileges;
     predictionTemplateIds?: string[];
     pickIds?: string[];
 }

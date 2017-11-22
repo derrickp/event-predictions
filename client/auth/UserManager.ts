@@ -12,6 +12,7 @@ const GOOGLE_SCOPE = "profile email";
 
 export default class UserManager {
 
+    private _authType: AuthTypes;
     private _initialized: boolean = false;
     private _googleAuth: gapi.auth2.GoogleAuth;
     private _watchCallbacks: Set<(eventName: string) => void> = new Set();
@@ -49,6 +50,7 @@ export default class UserManager {
         if (this.user) {
             return;
         }
+        this._authType = AuthTypes.GOOGLE;
         this.notify(AppEvents.LOADING);
         const id_token = googleUser.getAuthResponse().id_token;
         const token = await auth.authenticate(AuthTypes.GOOGLE, id_token);
@@ -59,8 +61,7 @@ export default class UserManager {
     }
 
     googleAuthFailure() {
-        debugger;
-        this.notify(AppEvents.LOADING);
+        this.notify(AppEvents.AUTH_FAILED);
     }
 
     async initialize() {
@@ -79,10 +80,25 @@ export default class UserManager {
         }
         const googleUser = this._getGoogleUser();
         if (googleUser) {
-            this.googleAuthCallback(googleUser);
+            await this.googleAuthCallback(googleUser);
         }
         this._initialized = true;
         console.timeEnd("auth-init");
+    }
+
+    async signOut() {
+        this.notify(AppEvents.LOADING);
+        delete this._user;
+        switch (this._authType) {
+            case AuthTypes.GOOGLE:
+                await this._googleSignOut();
+                break;
+        }
+        this.notify(AppEvents.NEW_USER);
+    }
+
+    async _googleSignOut() {
+        await gapi.auth2.getAuthInstance().signOut();
     }
 
     private _configureGoogleAuth(): Promise<void> {

@@ -1,10 +1,10 @@
 
 export interface PredictionEvent {
-    date: string;
     cutoff: string;
+    date: string;
     description: string;
-    title: string;
-    tags: string[];
     leagueIds: string[];
     predictionIds: string[];
+    tags: string[];
+    title: string;
 }
