@@ -1,8 +1,7 @@
 import * as Router from "koa-router";
 
+import { DAL } from "../DataAccessLayer";
 import { ErrorResponse } from "../../common/ErrorResponse";
-import { DBUserStore } from "../stores/DBUserStore";
-import { getDb } from "../db/connection";
 import { Methods, RouteDefinition } from "./RouteDefinition";
 
 export namespace UserRouter {
@@ -12,14 +11,12 @@ export namespace UserRouter {
             path: "/api/users/my-info",
             middleware: async (context: Router.IRouterContext) => {
                 try {
-                    console.log(context.state.user.key)
-                    const db = getDb();
-                    const store = new DBUserStore(db);
-                    let user = await store.get(context.state.user.key);
+                    console.log(context.state.user.key);
+                    const user = await DAL.Users.getByKey(context.state.user.key);
                     if (!user) {
                         throw new Error("user-not-found");
                     }
-                    context.body = JSON.stringify(user);
+                    context.body = JSON.stringify(user.dto);
                 }
                 catch (exception) {
                     const resp: ErrorResponse = {

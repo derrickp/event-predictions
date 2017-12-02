@@ -1,5 +1,5 @@
 
-import { Privileges } from "../Privileges";
+import { Privilege } from "../Privilege";
 
 /**
  * A representation of a user of the predictions site.
@@ -9,7 +9,7 @@ export interface UserDTO {
     email: string;
     display: string;
     avatar: string;
-    generalPrivilege: Privileges;
+    generalPrivilege: Privilege;
     predictionTemplateIds?: string[];
     pickIds?: string[];
 }

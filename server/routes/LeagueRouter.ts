@@ -1,9 +1,7 @@
 import * as Router from "koa-router";
 
 import { ErrorResponse } from "../../common/ErrorResponse";
-import { DBLeagueStore } from "../stores/DBLeagueStore";
-import { getDb } from "../db/connection";
-import League from "../models/League";
+import { DAL } from "../DataAccessLayer";
 import { Methods, RouteDefinition } from "./RouteDefinition";
 
 export namespace LeagueRouter {
@@ -15,10 +13,13 @@ export namespace LeagueRouter {
             middleware: async (context: Router.IRouterContext) => {
                 try {
                     const key = context.params.key;
-                    const db = getDb();
-                    const store = new DBLeagueStore(db);
-                    const leagueDTO = await store.get(key);
-                    context.body = JSON.stringify(leagueDTO);
+                    const league = await DAL.Leagues.getLeague(key);
+                    if (league) {
+                        context.body = JSON.stringify(league.dto);
+                    }
+                    else {
+                        context.throw(404, `No league found with key ${key}`);
+                    }
                 } catch (exception) {
                     const resp: ErrorResponse = {
                         message: exception.message,
@@ -33,9 +34,8 @@ export namespace LeagueRouter {
             method: Methods.GET,
             middleware: async (context: Router.IRouterContext, next: () => Promise<any>) => {
                 try {
-                    const db = getDb();
-                    const store = new DBLeagueStore(db);
-                    const leagueDTOs = await store.getMany();
+                    const leagues = await DAL.Leagues.getLeagues([]);
+                    const leagueDTOs = leagues.map(league => league.dto);
                     context.body = JSON.stringify(leagueDTOs);
                 } catch (exception) {
                     const resp: ErrorResponse = {
@@ -52,10 +52,8 @@ export namespace LeagueRouter {
             middleware: async (context: Router.IRouterContext) => {
                 try {
                     const leagueDTO = context.request.body;
-                    const db = getDb();
-                    const store = new DBLeagueStore(db);
-                    const league = new League(leagueDTO, store);
-                    await league.save();
+                    await DAL.Leagues.addLeague(leagueDTO);
+                    await DAL.save();
                     context.body = JSON.stringify({ success: true });
                 } catch (error) {
                     const resp: ErrorResponse = {

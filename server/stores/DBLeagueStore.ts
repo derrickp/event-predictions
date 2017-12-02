@@ -1,5 +1,4 @@
 
-import League from "../models/League";
 import { LeagueDTO } from "../../common/dtos/LeagueDTO";
 import { LeagueStore } from "../../common/stores/LeagueStore";
 

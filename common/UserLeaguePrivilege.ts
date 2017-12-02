@@ -1,7 +1,8 @@
 
-import { Privileges } from "./Privileges";
+import { Privilege } from "./Privilege";
 
 export interface UserLeaguePrivilege {
+    leagueKey: string;
     userKey: string;
-    privilege: Privileges;
+    privilege: Privilege;
 }

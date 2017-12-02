@@ -1,6 +1,4 @@
 
-import { UserLeaguePrivilege } from "../UserLeaguePrivilege";
-
 export interface LeagueDTO {
     _id?: string;
     key: string;
@@ -8,5 +6,4 @@ export interface LeagueDTO {
     description?: string;
     greeting?: string;
     tags?: string[];
-    userPrivileges: UserLeaguePrivilege[];
 }
