@@ -2,21 +2,20 @@
 import { AppEvents } from "../AppEvents";
 import * as auth from "../api/auth";
 import { AuthTypes } from "../../common/AuthRequest";
+import { publish } from "../Dispatch";
 import { GoogleAuthOptions } from "./GoogleAuthOptions";
-import { User } from "./User";
-import * as userFactory from "./UserFactory";
-import { WatchHandle } from "../WatchHandle";
+import { Observable } from "../../common/Observable";
+import { UserDTO } from "../../common/dtos/UserDTO";
 
 const GOOGLE_CLIENT_ID = "1038329696712-dcn0006s74elafi2t6prumb13olmu4q1.apps.googleusercontent.com";
 const GOOGLE_SCOPE = "profile email";
 
-export default class UserManager {
-
+export default class UserManager extends Observable {
     private _authType: AuthTypes;
     private _initialized: boolean = false;
     private _googleAuth: gapi.auth2.GoogleAuth;
-    private _watchCallbacks: Set<(eventName: string) => void> = new Set();
-    private _user: User;
+    private _user: UserDTO;
+    private _token: string;
 
     authOptions: GoogleAuthOptions;
 
@@ -24,24 +23,14 @@ export default class UserManager {
         return this._user;
     }
 
+    get token() {
+        return this._token;
+    }
+
     constructor() {
+        super();
         this.googleAuthCallback = this.googleAuthCallback.bind(this);
         this.googleAuthFailure = this.googleAuthFailure.bind(this);
-    }
-
-    watch(callback: (eventName: string) => void): WatchHandle {
-        this._watchCallbacks.add(callback);
-        return {
-            remove: () => {
-                this._watchCallbacks.delete(callback);
-            }
-        };
-    }
-
-    notify(event: AppEvents) {
-        for (const callback of this._watchCallbacks) {
-            callback(event);
-        }
     }
 
     async googleAuthCallback(googleUser: gapi.auth2.GoogleUser) {
@@ -51,17 +40,17 @@ export default class UserManager {
             return;
         }
         this._authType = AuthTypes.GOOGLE;
-        this.notify(AppEvents.LOADING);
+        publish(AppEvents.LOADING);
         const id_token = googleUser.getAuthResponse().id_token;
         const token = await auth.authenticate(AuthTypes.GOOGLE, id_token);
+        this._token = token;
         const dto = await auth.getCurrentUser(token);
-        const user = userFactory.get(dto, AuthTypes.GOOGLE);
-        this._user = user;
-        this.notify(AppEvents.NEW_USER);
+        this._user = dto;
+        publish(AppEvents.NEW_USER);
     }
 
     googleAuthFailure() {
-        this.notify(AppEvents.AUTH_FAILED);
+        publish(AppEvents.AUTH_FAILED);
     }
 
     async initialize() {
@@ -87,14 +76,14 @@ export default class UserManager {
     }
 
     async signOut() {
-        this.notify(AppEvents.LOADING);
+        publish(AppEvents.LOADING);
         delete this._user;
         switch (this._authType) {
             case AuthTypes.GOOGLE:
                 await this._googleSignOut();
                 break;
         }
-        this.notify(AppEvents.NEW_USER);
+        publish(AppEvents.NEW_USER);
     }
 
     async _googleSignOut() {

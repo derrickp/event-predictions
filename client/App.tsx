@@ -11,6 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import AccountCircle from "material-ui/svg-icons/action/account-circle";
 
 import { appTitle } from "./config";
+import { Main } from "./main/Main";
 import SignIn from "./sign-in/SignIn";
 import UserManager from "./auth/UserManager";
 
@@ -51,7 +52,8 @@ export class App extends React.Component<AppProps, AppState> {
 
     getMain(showMain: boolean) {
         if (showMain) {
-            return <div className={"app"} key={"hello-world"}>Hello world! It's a me! Picker App!</div>;
+            const loggedIn = this.props.userManager.user !== undefined;
+            return <Main key="main" loggedIn={loggedIn} />;
         }
         return null;
     }

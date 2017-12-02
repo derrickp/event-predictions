@@ -13,6 +13,41 @@ export class DBMembershipStore implements MembershipStore {
         this._db = db;
     }
 
+    async getUserKeys(leagueKey: string): Promise<string[]> {
+        const coll = this._db.collection(this._collKey);
+        const query = { leagueKey };
+        const privilegeCursor = await coll.find<UserLeaguePrivilege[]>(query);
+        const keys: string[] = [];
+        while ((await privilegeCursor.hasNext())) {
+            const privileges = await privilegeCursor.next();
+            keys.concat(privileges.map(p => p.userKey));
+        }
+        return keys;
+    }
+
+    async getUserPrivileges(userKey: string): Promise<UserLeaguePrivilege[]> {
+        const coll = this._db.collection(this._collKey);
+        const query = { userKey };
+        const privilegeCursor = await coll.find<UserLeaguePrivilege[]>(query);
+        const userLeaguePrivileges: UserLeaguePrivilege[] = [];
+        while ((await privilegeCursor.hasNext())) {
+            const privileges = await privilegeCursor.next();
+            userLeaguePrivileges.concat(privileges.slice());
+        }
+        return userLeaguePrivileges;
+    }
+
+    async getUserPrivilege(userKey: string, leagueKey: string): Promise<Privilege> {
+        const coll = this._db.collection(this._collKey);
+        const query = { $and: [ { userKey }, { leagueKey } ] };
+        const privilege = await coll.findOne<UserLeaguePrivilege>(query);
+        if (privilege) {
+            return privilege.privilege;
+        } else {
+            return Privilege.DENIED;
+        }
+    }
+
     async changeUserPrivilege(userKey: string, leagueKey: string, privilege: Privilege) {
         const coll = this._db.collection(this._collKey);
         const query = { $and: [ { userKey }, { leagueKey } ] };

@@ -23,18 +23,14 @@ export class DBLeagueStore implements LeagueStore {
         return league;
     }
 
-    async getMany(keys?: string[]): Promise<LeagueDTO[]> {
+    async getMany(keys: string[]): Promise<LeagueDTO[]> {
         const coll: mongodb.Collection<LeagueDTO> = this._db.collection(this._collKey);
         const leagues: LeagueDTO[] = [];
-        const filter = keys ? { key: {$in: keys }} : undefined;
+        const filter = (keys && keys.length > 0) ? { key: {$in: keys }} : undefined;
         const cursor = await coll.find(filter);
         while ((await cursor.hasNext())) {
             const league = await cursor.next();
-            if (!keys) {
-                leagues.push(league);
-            } else if (keys.indexOf(league.key) >= 0) {
-                leagues.push(league);
-            }
+            leagues.push(league);
         }
         return leagues;
     }

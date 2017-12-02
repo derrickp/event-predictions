@@ -16,8 +16,11 @@ export default class SignIn extends React.Component<SignInProps, SignInState> {
     }
 
     render() {
-        return [
-            <div key={AUTH_ID} id={AUTH_ID}></div>
-        ];
+        return (
+            <div className={"sign-in-container"}>
+                <div className={"sign-in sign-in-message"}>Sign in to the new prediction app!</div>
+                <div className={"sign-in"} key={AUTH_ID} id={AUTH_ID}></div>
+            </div>
+        )
     }
 }

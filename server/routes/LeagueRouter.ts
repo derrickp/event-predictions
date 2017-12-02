@@ -3,6 +3,7 @@ import * as Router from "koa-router";
 import { ErrorResponse } from "../../common/ErrorResponse";
 import { DAL } from "../DataAccessLayer";
 import { Methods, RouteDefinition } from "./RouteDefinition";
+import { Privilege } from "../../common/Privilege";
 
 export namespace LeagueRouter {
     export const basePath = "/api/leagues";
@@ -12,10 +13,23 @@ export namespace LeagueRouter {
             method: Methods.GET,
             middleware: async (context: Router.IRouterContext) => {
                 try {
+                    const userKey = context.state.user ? context.state.user.key : undefined;
+                    if (!userKey) {
+                        throw new Error("invalid-auth");
+                    }
+                    const user = await DAL.Users.getByKey(userKey);
+                    if (!user) {
+                        throw new Error("invalid-user");
+                    }
                     const key = context.params.key;
                     const league = await DAL.Leagues.getLeague(key);
                     if (league) {
-                        context.body = JSON.stringify(league.dto);
+                        const leaguePrivilege = await DAL.Memberships.getUserPrivilege(user, league);
+                        if (leaguePrivilege == Privilege.DENIED) {
+                            context.throw(401, `Not authorized to view league`);
+                        } else {
+                            context.body = JSON.stringify(league.dto);
+                        }
                     }
                     else {
                         context.throw(404, `No league found with key ${key}`);
@@ -34,7 +48,23 @@ export namespace LeagueRouter {
             method: Methods.GET,
             middleware: async (context: Router.IRouterContext, next: () => Promise<any>) => {
                 try {
-                    const leagues = await DAL.Leagues.getLeagues([]);
+                    const userKey = context.state.user ? context.state.user.key : undefined;
+                    if (!userKey) {
+                        throw new Error("invalid-auth");
+                    }
+                    console.time("user");
+                    const user = await DAL.Users.getByKey(userKey);
+                    console.timeEnd("user");
+                    if (!user) {
+                        throw new Error("invalid-user");
+                    }
+                    console.time("privs");
+                    const leaguePrivileges = await DAL.Memberships.getLeaguePrivileges(user);
+                    const leagueKeys = leaguePrivileges.filter(lp => lp.privilege !== Privilege.DENIED).map(lp => lp.leagueKey);
+                    console.timeEnd("privs");
+                    console.time("leagues");
+                    const leagues = await DAL.Leagues.getLeagues(leagueKeys);
+                    console.timeEnd("leagues");
                     const leagueDTOs = leagues.map(league => league.dto);
                     context.body = JSON.stringify(leagueDTOs);
                 } catch (exception) {

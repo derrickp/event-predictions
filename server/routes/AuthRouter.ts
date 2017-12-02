@@ -22,6 +22,7 @@ export namespace AuthRouter {
                 try {
                     const authRequest: AuthRequest = context.request.body;
                     const genAuth = await verify(authRequest);
+                    console.log(genAuth.email);
                     const user = await DAL.Users.getByEmail(genAuth.email);
                     let userDTO: UserDTO;
                     if (!user) {

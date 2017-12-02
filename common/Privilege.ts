@@ -7,5 +7,6 @@ export enum Privilege {
     PREDICTION_TEMPLATE_EDITOR = "prediction-template-editor",
     PICK_TEMPLATE_CREATOR = "pick-template-creator",
     INVITER = "inviter",
-    USER = "user"
+    USER = "user",
+    DENIED = "denied"
 }

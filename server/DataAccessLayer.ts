@@ -3,10 +3,13 @@ import { DBLeagueStore } from "./stores/DBLeagueStore";
 import { DBMembershipStore } from "./stores/DBMembershipStore";
 import { DBUserStore } from "./stores/DBUserStore";
 import { getDb } from "./db/connection";
+import { getKeyFromEmail } from "./utilities/keys";
 import { LeagueDTO } from "../common/dtos/LeagueDTO";
 import League from "./models/leagues/League";
+import { Privilege } from "../common/Privilege";
 import User from "./models/users/User";
 import { uuidv4 } from "./utilities/guid";
+import { UserLeaguePrivilege } from "../common/UserLeaguePrivilege";
 
 export namespace DAL {
 
@@ -87,6 +90,27 @@ export namespace DAL {
     }
 
     export namespace Memberships {
+
+        export async function getUserPrivilege(user: User, league: League): Promise<Privilege> {
+            const db = getDb();
+            const store = new DBMembershipStore(db);
+            const privilege = await store.getUserPrivilege(user.key, league.key);
+            return privilege;
+        }
+
+        export async function getLeaguePrivileges(user: User): Promise<UserLeaguePrivilege[]> {
+            const db = getDb();
+            const store = new DBMembershipStore(db);
+            const privileges = await store.getUserPrivileges(user.key);
+            return privileges;
+        }
+
+        export async function getUserKeys(league: League): Promise<string[]> {
+            const db = getDb();
+            const store = new DBMembershipStore(db);
+            const keys = await store.getUserKeys(league.key);
+            return keys;
+        }
         
         export async function changeUserLeaguePrivilege(user: User, league: League, privilege: Privilege) { 
             const db = getDb();
@@ -131,7 +155,7 @@ export namespace DAL {
         }
     
         export async function getByEmail(email: string): Promise<User | undefined> {
-            const key = email;
+            const key = getKeyFromEmail(email);
             return getByKey(key);
         }
     

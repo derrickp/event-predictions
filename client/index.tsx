@@ -8,12 +8,29 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import { App } from "./App";
 import { AppEvents } from "./AppEvents";
+import * as dispatch from "./Dispatch";
+import { setToken } from "./stores/Store";
 import UserManager from "./auth/UserManager";
 
 const element = document.getElementById("picker-app") as HTMLElement;
 
 export function start() {
     const userManager = new UserManager();
+
+    dispatch.subscribe(AppEvents.NEW_USER, (event) => {
+        setToken(userManager.token);
+        render(userManager, event);
+    });
+
+    dispatch.subscribe(AppEvents.LOADING, (event) => {
+        render(userManager, event);
+    });
+
+    dispatch.subscribe(AppEvents.AUTH_FAILED, (event) => {
+        setToken("");
+        render(userManager, event);
+    });
+
     userManager.initialize().then(() => {
         render(userManager);
     }).catch((error: Error) => {

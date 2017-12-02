@@ -1,5 +1,5 @@
 
-export interface PredictionEvent {
+export interface PredictionEventDTO {
     cutoff: string;
     date: string;
     description: string;
