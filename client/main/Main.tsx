@@ -56,7 +56,7 @@ export class Main extends React.Component<MainProps, MainState> {
         })
         return (
             <div>
-                Hey! You're logged in! Congrats! Once the app is more setup you'll be able to see more!
+                Hey! You're logged in! Congrats! Here are the Leagues you're a member of!
                 <ul>
                     {leagues}
                 </ul>

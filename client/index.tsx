@@ -59,7 +59,6 @@ const Container = (props: { userManager: UserManager, loading: boolean }) => {
 
 export function render(userManager: UserManager, eventName?: string) {
     let loading: boolean = eventName ? eventName === AppEvents.LOADING : false;
-
     ReactDOM.render(<Container userManager={userManager} loading={loading} />, element);
 }
 
