@@ -53,19 +53,19 @@ export class DBMembershipStore {
         const existing = await coll.findOne<UserLeaguePrivilege>(query);
         console.log(JSON.stringify(existing));
 
-        const newPriv: UserLeaguePrivilege = {
+        const newPrivilege: UserLeaguePrivilege = {
             userKey,
             leagueKey,
             privilege,
         };
         if (existing) {
-            const result = await coll.findOneAndReplace(query, newPriv);
+            const result = await coll.findOneAndReplace(query, newPrivilege);
             if (!result.ok) {
                 const errorMessage = JSON.stringify(result.lastErrorObject);
                 throw new Error(errorMessage);
             }
         } else {
-            const result = await coll.insertOne(newPriv);
+            const result = await coll.insertOne(newPrivilege);
             if (result.insertedCount < 1) {
                 throw new Error("error-insert-new-membership");
             }

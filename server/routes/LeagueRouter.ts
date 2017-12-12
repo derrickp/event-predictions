@@ -57,11 +57,11 @@ export namespace LeagueRouter {
                     if (!user) {
                         throw new Error("invalid-user");
                     }
-                    console.time("privs");
+                    console.time("privileges");
                     const leaguePrivileges = await DAL.Memberships.getLeaguePrivileges(user);
                     const leagueKeys = leaguePrivileges
                         .filter((lp) => lp.privilege !== Privilege.DENIED).map((lp) => lp.leagueKey);
-                    console.timeEnd("privs");
+                    console.timeEnd("privileges");
                     console.time("leagues");
                     const leagues = await DAL.Leagues.getLeagues(leagueKeys);
                     console.timeEnd("leagues");
