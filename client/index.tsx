@@ -48,14 +48,16 @@ const Container = (props: { userManager: UserManager, loading: boolean }) => {
     return (
         <MuiThemeProvider>
             <HashRouter>
-                <Route path="/" render={(appProps) => {
-                    const showMain = appProps.location.pathname === "/";
-                    return <App
-                        userManager={props.userManager}
-                        history={appProps.history}
-                        showMain={showMain}
-                        loading={props.loading} />;
-                }} />;
+                <div>
+                    <Route path="/" render={(appProps) => {
+                        const showMain = appProps.location.pathname === "/";
+                        return <App
+                            userManager={props.userManager}
+                            history={appProps.history}
+                            showMain={showMain}
+                            loading={props.loading} />;
+                    }} />
+                </div>
             </HashRouter>
         </MuiThemeProvider>
     );

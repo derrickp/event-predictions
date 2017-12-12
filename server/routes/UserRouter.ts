@@ -1,4 +1,4 @@
-import * as Router from "koa-router";
+import { IRouterContext } from "koa-router";
 
 import { ErrorResponse } from "../../common/ErrorResponse";
 import { DAL } from "../DataAccessLayer";
@@ -9,7 +9,7 @@ export namespace UserRouter {
         {
             method: Methods.GET,
             path: "/api/users/my-info",
-            middleware: async (context: Router.IRouterContext) => {
+            middleware: async (context: IRouterContext) => {
                 try {
                     console.log(context.state.user.key);
                     const user = await DAL.Users.getByKey(context.state.user.key);

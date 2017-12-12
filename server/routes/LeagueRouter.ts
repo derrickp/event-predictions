@@ -1,4 +1,4 @@
-import * as Router from "koa-router";
+import { IRouterContext } from "koa-router";
 
 import { ErrorResponse } from "../../common/ErrorResponse";
 import { Privilege } from "../../common/Privilege";
@@ -11,7 +11,7 @@ export namespace LeagueRouter {
         {
             path: `${LeagueRouter.basePath}/:key`,
             method: Methods.GET,
-            middleware: async (context: Router.IRouterContext) => {
+            middleware: async (context: IRouterContext) => {
                 try {
                     const userKey = context.state.user ? context.state.user.key : undefined;
                     if (!userKey) {
@@ -45,7 +45,7 @@ export namespace LeagueRouter {
         {
             path: LeagueRouter.basePath,
             method: Methods.GET,
-            middleware: async (context: Router.IRouterContext, next: () => Promise<any>) => {
+            middleware: async (context: IRouterContext, next: () => Promise<any>) => {
                 try {
                     const userKey = context.state.user ? context.state.user.key : undefined;
                     if (!userKey) {
@@ -79,7 +79,7 @@ export namespace LeagueRouter {
         {
             path: LeagueRouter.basePath,
             method: Methods.POST,
-            middleware: async (context: Router.IRouterContext) => {
+            middleware: async (context: IRouterContext) => {
                 try {
                     const leagueDTO = context.request.body;
                     await DAL.Leagues.addLeague(leagueDTO);

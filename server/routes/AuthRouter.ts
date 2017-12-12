@@ -1,6 +1,6 @@
 
 import { sign } from "jsonwebtoken";
-import * as Router from "koa-router";
+import { IRouterContext } from "koa-router";
 
 import { AuthRequest } from "../../common/AuthRequest";
 import { AuthResponse } from "../../common/AuthResponse";
@@ -19,7 +19,7 @@ export namespace AuthRouter {
         {
             method: Methods.POST,
             path: "/api/authenticate",
-            middleware: async (context: Router.IRouterContext) => {
+            middleware: async (context: IRouterContext) => {
                 try {
                     const authRequest: AuthRequest = context.request.body;
                     const genAuth = await verify(authRequest);
