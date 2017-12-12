@@ -1,17 +1,18 @@
-import * as Router from "koa-router";
+
 import { sign } from "jsonwebtoken";
+import * as Router from "koa-router";
 
 import { AuthRequest } from "../../common/AuthRequest";
 import { AuthResponse } from "../../common/AuthResponse";
-import { DAL } from "../DataAccessLayer";
+import { UserDTO } from "../../common/dtos/UserDTO";
 import { ErrorResponse } from "../../common/ErrorResponse";
+import { Privilege } from "../../common/Privilege";
+import { DAL } from "../DataAccessLayer";
+import User from "../models/users/User";
 import { getKeyFromEmail } from "../utilities/keys";
 import { Methods, RouteDefinition } from "./RouteDefinition";
-import { Privilege } from "../../common/Privilege";
-import { UserDTO } from "../../common/dtos/UserDTO";
-import User from "../models/users/User";
 
-import { verify, GeneralAuthResponse } from "../utilities/auth";
+import { GeneralAuthResponse, verify } from "../utilities/auth";
 
 export namespace AuthRouter {
     export const routes: RouteDefinition[] = [
@@ -34,19 +35,18 @@ export namespace AuthRouter {
                         userDTO = user.dto;
                     }
                     const secret = process.env.JWTSECRET as string;
-                    const token = sign({ key: userDTO.key }, secret, { algorithm: 'HS256', expiresIn: "4h" });
+                    const token = sign({ key: userDTO.key }, secret, { algorithm: "HS256", expiresIn: "4h" });
                     const response: AuthResponse = { token };
                     context.body = JSON.stringify(response);
-                }
-                catch (exception) {
+                } catch (exception) {
                     const resp: ErrorResponse = {
                         message: exception.message,
-                        stack: exception.stack
+                        stack: exception.stack,
                     };
                     context.throw(400, JSON.stringify(resp));
                 }
-            }
-        }
+            },
+        },
     ];
 }
 
@@ -57,7 +57,7 @@ async function signUpNewUser(genAuth: GeneralAuthResponse): Promise<User> {
         email: genAuth.email,
         display: genAuth.name,
         avatar: genAuth.picture,
-        generalPrivilege: Privilege.USER
+        generalPrivilege: Privilege.USER,
     };
     const existingUser = await DAL.Users.getByKey(key);
     if (existingUser) {

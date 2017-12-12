@@ -1,23 +1,23 @@
 
-import { AppEvents } from "../AppEvents";
-import * as auth from "../api/auth";
 import { AuthTypes } from "../../common/AuthRequest";
+import { UserDTO } from "../../common/dtos/UserDTO";
+import { Observable } from "../../common/Observable";
+import * as auth from "../api/auth";
+import { AppEvents } from "../AppEvents";
 import { publish } from "../Dispatch";
 import { GoogleAuthOptions } from "./GoogleAuthOptions";
-import { Observable } from "../../common/Observable";
-import { UserDTO } from "../../common/dtos/UserDTO";
 
 const GOOGLE_CLIENT_ID = "1038329696712-dcn0006s74elafi2t6prumb13olmu4q1.apps.googleusercontent.com";
 const GOOGLE_SCOPE = "profile email";
 
 export default class UserManager extends Observable {
+    authOptions: GoogleAuthOptions;
+
     private _authType: AuthTypes;
     private _initialized: boolean = false;
     private _googleAuth: gapi.auth2.GoogleAuth;
     private _user: UserDTO;
     private _token: string;
-
-    authOptions: GoogleAuthOptions;
 
     get user() {
         return this._user;
@@ -65,8 +65,8 @@ export default class UserManager extends Observable {
             scope: GOOGLE_SCOPE,
             onsuccess: this.googleAuthCallback,
             onfailure: this.googleAuthFailure,
-            theme: "dark"
-        }
+            theme: "dark",
+        };
         const googleUser = this._getGoogleUser();
         if (googleUser) {
             await this.googleAuthCallback(googleUser);
@@ -102,8 +102,8 @@ export default class UserManager extends Observable {
                 timeout: 1000,
                 ontimeout: () => {
                     reject(new Error("google auth timeout"));
-                }
-            }
+                },
+            };
             gapi.load("auth2", config);
         });
     }
@@ -111,7 +111,7 @@ export default class UserManager extends Observable {
     private _initGoogle(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             gapi.auth2.init({
-                client_id: GOOGLE_CLIENT_ID
+                client_id: GOOGLE_CLIENT_ID,
             }).then(() => {
                 this._googleAuth = gapi.auth2.getAuthInstance();
                 resolve();

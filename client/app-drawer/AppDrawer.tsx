@@ -1,8 +1,8 @@
 
 import * as React from "react";
 
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
+import Drawer from "material-ui/Drawer";
+import MenuItem from "material-ui/MenuItem";
 
 import { MenuItemDefinition } from "./MenuItemDefinition";
 
@@ -15,7 +15,7 @@ export interface AppDrawerProps {
 
 export const AppDrawer = (props: AppDrawerProps) => {
 
-    const menuItems = props.menuItems.map(mi => {
+    const menuItems = props.menuItems.map((mi) => {
         return <MenuItem key={mi.id} onClick={() => props.clickMenuItem(mi)}>{mi.title}</MenuItem>;
     });
 

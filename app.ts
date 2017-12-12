@@ -1,16 +1,15 @@
 
-import * as bodyParser from "koa-bodyparser";
 import * as Koa from "koa";
+import * as bodyParser from "koa-bodyparser";
 import * as jwt from "koa-jwt";
-import * as mongodb from "mongodb";
 import * as Router from "koa-router";
 import * as serve from "koa-static";
+import * as mongodb from "mongodb";
 
 import { PORT } from "./server/config";
-
-import { Methods } from "./server/routes/RouteDefinition";
-import { publicRoutes, securedRoutes } from "./server/routes";
 import { setDb } from "./server/db/connection";
+import { publicRoutes, securedRoutes } from "./server/routes";
+import { Methods } from "./server/routes/RouteDefinition";
 
 export async function start() {
     const secret = process.env.JWTSECRET;
@@ -26,7 +25,7 @@ export async function start() {
     const app = new Koa();
 
     app.use(bodyParser());
-    app.use(serve(__dirname + '/public'));
+    app.use(serve(__dirname + "/public"));
 
     const port = process.env.PORT ? process.env.PORT : PORT;
 

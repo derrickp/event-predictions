@@ -7,7 +7,6 @@ import { getLeagues } from "../api/leagues";
 
 import { LeagueDTO } from "../../common/dtos/LeagueDTO";
 
-
 let token: string = "";
 
 export function setToken(t: string) {

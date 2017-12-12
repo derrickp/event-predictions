@@ -1,7 +1,7 @@
 import * as Router from "koa-router";
 
-import { DAL } from "../DataAccessLayer";
 import { ErrorResponse } from "../../common/ErrorResponse";
+import { DAL } from "../DataAccessLayer";
 import { Methods, RouteDefinition } from "./RouteDefinition";
 
 export namespace UserRouter {
@@ -17,15 +17,14 @@ export namespace UserRouter {
                         throw new Error("user-not-found");
                     }
                     context.body = JSON.stringify(user.dto);
-                }
-                catch (exception) {
+                } catch (exception) {
                     const resp: ErrorResponse = {
                         message: exception.message,
-                        stack: exception.stack
+                        stack: exception.stack,
                     };
                     context.throw(400, JSON.stringify(resp));
                 }
-            }
-        }
+            },
+        },
     ];
 }

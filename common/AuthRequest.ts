@@ -5,5 +5,5 @@ export interface AuthRequest {
 }
 
 export enum AuthTypes {
-    GOOGLE = "google"
+    GOOGLE = "google",
 }

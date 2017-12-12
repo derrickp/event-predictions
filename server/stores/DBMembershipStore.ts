@@ -1,11 +1,10 @@
 
-import { MembershipStore } from "../../common/stores/MembershipStore";
 import { Privilege } from "../../common/Privilege";
 import { UserLeaguePrivilege } from "../../common/UserLeaguePrivilege";
 
 import * as mongodb from "mongodb";
 
-export class DBMembershipStore implements MembershipStore {
+export class DBMembershipStore {
     private readonly _db: mongodb.Db;
     private readonly _collKey = "memberships";
 
@@ -20,7 +19,7 @@ export class DBMembershipStore implements MembershipStore {
         const keys: string[] = [];
         while ((await privilegeCursor.hasNext())) {
             const privileges = await privilegeCursor.next();
-            keys.concat(privileges.map(p => p.userKey));
+            keys.concat(privileges.map((p) => p.userKey));
         }
         return keys;
     }
@@ -57,7 +56,7 @@ export class DBMembershipStore implements MembershipStore {
         const newPriv: UserLeaguePrivilege = {
             userKey,
             leagueKey,
-            privilege
+            privilege,
         };
         if (existing) {
             const result = await coll.findOneAndReplace(query, newPriv);

@@ -9,5 +9,5 @@ export interface RouteDefinition {
 
 export enum Methods {
     GET = "get",
-    POST = "post"
+    POST = "post",
 }

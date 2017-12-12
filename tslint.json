@@ -1,0 +1,19 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "array-type": [true, "array"],
+        "interface-name": [true, "never-prefix"],
+        "member-access": [true, "no-public"],
+        "member-ordering": [true, {"order": "fields-first"}],
+        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore", "allow-pascal-case"],
+        "no-console": false,
+        "no-empty-interface": false,
+        "no-namespace": false,
+        "no-bitwise": false
+    },
+    "rulesDirectory": []
+}

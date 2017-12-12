@@ -1,9 +1,9 @@
 
 import { LeagueDTO } from "../../../common/dtos/LeagueDTO";
 import { Observable } from "../../../common/Observable";
-import User from "../users/User";
-import { UserLeaguePrivilege } from "../../../common/UserLeaguePrivilege";
 import { Privilege } from "../../../common/Privilege";
+import { UserLeaguePrivilege } from "../../../common/UserLeaguePrivilege";
+import User from "../users/User";
 
 export default class League extends Observable implements LeagueDTO {
     key: string;
@@ -30,12 +30,12 @@ export default class League extends Observable implements LeagueDTO {
             display: this.display,
             description: this.description,
             greeting: this.greeting,
-            tags: this.tags
+            tags: this.tags,
         };
     }
 
     async getUsers() {
-        const userKeys = this.userPrivileges.map(u => u.userKey);
-        return this.getLeagueUsers(userKeys); 
+        const userKeys = this.userPrivileges.map((u) => u.userKey);
+        return this.getLeagueUsers(userKeys);
     }
 }

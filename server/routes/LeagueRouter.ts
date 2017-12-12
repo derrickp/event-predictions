@@ -1,9 +1,9 @@
 import * as Router from "koa-router";
 
 import { ErrorResponse } from "../../common/ErrorResponse";
+import { Privilege } from "../../common/Privilege";
 import { DAL } from "../DataAccessLayer";
 import { Methods, RouteDefinition } from "./RouteDefinition";
-import { Privilege } from "../../common/Privilege";
 
 export namespace LeagueRouter {
     export const basePath = "/api/leagues";
@@ -25,23 +25,22 @@ export namespace LeagueRouter {
                     const league = await DAL.Leagues.getLeague(key);
                     if (league) {
                         const leaguePrivilege = await DAL.Memberships.getUserPrivilege(user, league);
-                        if (leaguePrivilege == Privilege.DENIED) {
+                        if (leaguePrivilege === Privilege.DENIED) {
                             context.throw(401, `Not authorized to view league`);
                         } else {
                             context.body = JSON.stringify(league.dto);
                         }
-                    }
-                    else {
+                    } else {
                         context.throw(404, `No league found with key ${key}`);
                     }
                 } catch (exception) {
                     const resp: ErrorResponse = {
                         message: exception.message,
-                        stack: exception.stack
+                        stack: exception.stack,
                     };
                     context.throw(400, JSON.stringify(resp));
                 }
-            }
+            },
         },
         {
             path: LeagueRouter.basePath,
@@ -60,21 +59,22 @@ export namespace LeagueRouter {
                     }
                     console.time("privs");
                     const leaguePrivileges = await DAL.Memberships.getLeaguePrivileges(user);
-                    const leagueKeys = leaguePrivileges.filter(lp => lp.privilege !== Privilege.DENIED).map(lp => lp.leagueKey);
+                    const leagueKeys = leaguePrivileges
+                        .filter((lp) => lp.privilege !== Privilege.DENIED).map((lp) => lp.leagueKey);
                     console.timeEnd("privs");
                     console.time("leagues");
                     const leagues = await DAL.Leagues.getLeagues(leagueKeys);
                     console.timeEnd("leagues");
-                    const leagueDTOs = leagues.map(league => league.dto);
+                    const leagueDTOs = leagues.map((league) => league.dto);
                     context.body = JSON.stringify(leagueDTOs);
                 } catch (exception) {
                     const resp: ErrorResponse = {
                         message: exception.message,
-                        stack: exception.stack
+                        stack: exception.stack,
                     };
                     context.throw(400, JSON.stringify(resp));
                 }
-            }
+            },
         },
         {
             path: LeagueRouter.basePath,
@@ -88,11 +88,11 @@ export namespace LeagueRouter {
                 } catch (error) {
                     const resp: ErrorResponse = {
                         message: error.message,
-                        stack: error.stack
+                        stack: error.stack,
                     };
                     context.throw(400, JSON.stringify(resp));
                 }
-            }
-        }
+            },
+        },
     ];
 }

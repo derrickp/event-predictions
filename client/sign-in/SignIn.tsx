@@ -21,6 +21,6 @@ export default class SignIn extends React.Component<SignInProps, SignInState> {
                 <div className={"sign-in sign-in-message"}>Sign in to the new prediction app!</div>
                 <div className={"sign-in"} key={AUTH_ID} id={AUTH_ID}></div>
             </div>
-        )
+        );
     }
 }

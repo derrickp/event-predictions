@@ -14,7 +14,7 @@ export async function verify(request: AuthRequest): Promise<GeneralAuthResponse>
             return {
                 email: authResponse.email,
                 name: authResponse.name,
-                picture: authResponse.picture
+                picture: authResponse.picture,
             };
         default:
             throw new Error("invalid-auth-type");
@@ -23,14 +23,14 @@ export async function verify(request: AuthRequest): Promise<GeneralAuthResponse>
 
 function verifyGoogleId(token: string): Promise<GoogleAuthResponse> {
     return new Promise<GoogleAuthResponse>((resolve, reject) => {
-        const GoogleAuth = require('google-auth-library');
-        const auth = new GoogleAuth;
-        const client = new auth.OAuth2(GOOGLE_CLIENT_ID, '', '');
+        const GoogleAuth = require("google-auth-library");
+        const auth = new GoogleAuth();
+        const client = new auth.OAuth2(GOOGLE_CLIENT_ID, "", "");
         client.verifyIdToken(
             token,
             GOOGLE_CLIENT_ID,
             // Or, if multiple clients access the backend:
-            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3],
+            // [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3],
             (error: string, login: any) => {
                 if (error) {
                     console.error(error);
@@ -47,7 +47,7 @@ export interface GoogleAuthResponse {
     email: string;
     email_verified: boolean;
     name: string;
-    picture: string,
+    picture: string;
     given_name: string;
     family_name: string;
     locale: string;

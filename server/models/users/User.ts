@@ -1,7 +1,7 @@
 
+import { UserDTO } from "../../../common/dtos/UserDTO";
 import { Observable } from "../../../common/Observable";
 import { Privilege } from "../../../common/Privilege";
-import { UserDTO } from "../../../common/dtos/UserDTO";
 
 export default class User extends Observable implements UserDTO {
     key: string;
@@ -20,7 +20,7 @@ export default class User extends Observable implements UserDTO {
             generalPrivilege: this.generalPrivilege,
             pickIds: this.pickIds,
             predictionTemplateIds: this.predictionTemplateIds,
-            avatar: this.avatar
+            avatar: this.avatar,
         };
     }
 

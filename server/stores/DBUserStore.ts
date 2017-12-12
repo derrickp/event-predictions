@@ -1,20 +1,15 @@
 
 import { UserDTO } from "../../common/dtos/UserDTO";
-import { UserStore } from "../../common/stores/UserStore";
 
 import * as mongodb from "mongodb";
 
-export class DBUserStore implements UserStore {
+export class DBUserStore {
 
     private readonly _db: mongodb.Db;
     private readonly _collKey = "users";
 
     constructor(db: mongodb.Db) {
         this._db = db;
-    }
-
-    async create(user: UserDTO): Promise<string> {
-        return "";
     }
 
     async get(key: string): Promise<UserDTO | null> {
@@ -46,7 +41,7 @@ export class DBUserStore implements UserStore {
         }
     }
 
-    async saveMany(users: UserDTO[]): Promise<void> {
+    // async saveMany(users: UserDTO[]): Promise<void> {
 
-    }
+    // }
 }

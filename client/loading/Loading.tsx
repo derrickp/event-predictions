@@ -1,7 +1,7 @@
 
 import * as React from "react";
 
-import CircularProgress from 'material-ui/CircularProgress';
+import CircularProgress from "material-ui/CircularProgress";
 
 export const Loading = () => {
     return (
@@ -13,5 +13,5 @@ export const Loading = () => {
                 <CircularProgress size={80} thickness={7} />
             </div>
         </div>
-    )
+    );
 };

@@ -1,20 +1,14 @@
 
 import { LeagueDTO } from "../../common/dtos/LeagueDTO";
-import { LeagueStore } from "../../common/stores/LeagueStore";
 
 import * as mongodb from "mongodb";
 
-export class DBLeagueStore implements LeagueStore {
+export class DBLeagueStore {
     private readonly _db: mongodb.Db;
     private readonly _collKey = "leagues";
 
     constructor(db: mongodb.Db) {
         this._db = db;
-    }
-
-    async create(league: LeagueDTO): Promise<string> {
-        let key: string = league.display.toLowerCase().split(" ").join("-");
-        return key;
     }
 
     async get(key: string): Promise<LeagueDTO | null> {

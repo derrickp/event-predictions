@@ -4,5 +4,5 @@ export enum AppEvents {
     AUTH_FAILED = "auth-failed",
     LOADING = "loading",
     NEW_USER = "new-user",
-    LEAGUES_FETCHED = "leagues-fetched"
+    LEAGUES_FETCHED = "leagues-fetched",
 }

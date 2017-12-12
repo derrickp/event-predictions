@@ -8,5 +8,5 @@ export enum Privilege {
     PICK_TEMPLATE_CREATOR = "pick-template-creator",
     INVITER = "inviter",
     USER = "user",
-    DENIED = "denied"
+    DENIED = "denied",
 }

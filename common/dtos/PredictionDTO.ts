@@ -9,5 +9,5 @@ export interface PredictionDTO extends PredictionTemplate {
 
 export enum FreeEntryType {
     NUMBER = "number",
-    TEXT = "text"
-};
+    TEXT = "text",
+}

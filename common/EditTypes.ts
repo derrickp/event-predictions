@@ -1,4 +1,4 @@
 export enum EditTypes {
     READ = "read",
-    WRITE = "write"
+    WRITE = "write",
 }

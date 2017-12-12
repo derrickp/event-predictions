@@ -4,13 +4,13 @@ import * as ReactDOM from "react-dom";
 
 import { HashRouter, Route } from "react-router-dom";
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 import { App } from "./App";
 import { AppEvents } from "./AppEvents";
+import UserManager from "./auth/UserManager";
 import * as dispatch from "./Dispatch";
 import { setToken } from "./stores/Store";
-import UserManager from "./auth/UserManager";
 
 const element = document.getElementById("picker-app") as HTMLElement;
 
@@ -50,16 +50,21 @@ const Container = (props: { userManager: UserManager, loading: boolean }) => {
             <HashRouter>
                 <Route path="/" render={(appProps) => {
                     const showMain = appProps.location.pathname === "/";
-                    return <App userManager={props.userManager} history={appProps.history} showMain={showMain} loading={props.loading} />
-                }} />
+                    return <App
+                        userManager={props.userManager}
+                        history={appProps.history}
+                        showMain={showMain}
+                        loading={props.loading} />;
+                }} />;
             </HashRouter>
         </MuiThemeProvider>
     );
 };
 
 export function render(userManager: UserManager, eventName?: string) {
-    let loading: boolean = eventName ? eventName === AppEvents.LOADING : false;
+    const loading: boolean = eventName ? eventName === AppEvents.LOADING : false;
     ReactDOM.render(<Container userManager={userManager} loading={loading} />, element);
 }
 
-(window as any)["start"] = start; // Set the start function on the window for the callback to the google api script
+const startKey = "start";
+(window as any)[startKey] = start; // Set the start function on the window for the callback to the google api script
